@@ -161,12 +161,11 @@ public class Graph {
 	 * 
 	 * Precondition: the inputs correspond to nodes in the graph. 
 	 */
-	public List<Node> searchDFS(String start, String finish) { 
+	public List<Node> searchDFS(String start) { 
 
 		// assumes input check occurs previously
 		Node startNode, finishNode;
 		startNode = graph.get(start);
-		finishNode = graph.get(finish);
 
 		// prime the dispenser (stack) with the starting node
 		List<Node> dispenser = new LinkedList<Node>();
@@ -181,9 +180,6 @@ public class Graph {
 		// dispenser is empty (no path)
 		while (!dispenser.isEmpty()) { 
 			Node current = dispenser.remove(0); 
-			if (current == finishNode) {
-				break;
-			}
 			// loop over all neighbors of current
 			for (Node nbr : current.getNeighbors()) { 
 				// process unvisited neighbors
@@ -194,7 +190,7 @@ public class Graph {
 			}
 		}
 
-		return constructPath(predecessors, startNode, finishNode);
+		return constructPath(predecessors, startNode);
 	}
 
 	/**
@@ -210,12 +206,11 @@ public class Graph {
 	 * 
 	 * Precondition: the inputs correspond to nodes in the graph. 
 	 */
-	public List<Node> searchBFS(String start, String finish) { 
+	public List<Node> searchBFS(String start) { 
 
 		// assumes input check occurs previously
 		Node startNode, finishNode;
 		startNode = graph.get(start);
-		finishNode = graph.get(finish);
 
 		// prime the dispenser (queue) with the starting node
 		List<Node> dispenser = new LinkedList<Node>();
@@ -230,9 +225,6 @@ public class Graph {
 		// dispenser is empty (no path)
 		while (!dispenser.isEmpty()) { 
 			Node current = dispenser.remove(0);
-			if (current == finishNode) {
-				break;
-			}
 			// loop over all neighbors of current
 			for (Node nbr : current.getNeighbors()) { 
 				// process unvisited neighbors
@@ -243,7 +235,7 @@ public class Graph {
 			}
 		}
 
-		return constructPath(predecessors, startNode, finishNode);
+		return constructPath(predecessors, startNode);
 	}
 
 
@@ -256,24 +248,27 @@ public class Graph {
 	 * @return a list containing the sequence of nodes comprising the path.
 	 * Empty if no path exists.
 	 */
+	@SuppressWarnings("unchecked")
 	private List<Node> constructPath(Map<Node,Node> predecessors,
-			Node startNode, Node finishNode) { 
+			Node startNode) { 
 
 		// use predecessors to work backwards from finish to start, 
 		// all the while dumping everything into a linked list
-		
 
-		if(predecessors.containsKey(finishNode)) { 
-			Node currNode = finishNode;
-			while (currNode != startNode) { 
-				path.add(0, currNode);
-				currNode = predecessors.get(currNode);
-			}	
+		if(predecessors.containsKey(startNode)) { 
+			Node currNode = startNode;
+			LinkedList<Node> jeff = (LinkedList<Node>) predecessors.keySet();
+			for (int a = 0; a<jeff.size(); a++){
+				while (currNode != predecessors.get(a)) { 
+					path.add(0, currNode);
+					currNode = predecessors.get(currNode);
+				}			
+			}
 			path.add(0, startNode);
 		}
-
 		return path;
 	}
+	
 
 	public List<Node> computeAllPrereqs(String name) {
 		// TODO Auto-generated method stub
